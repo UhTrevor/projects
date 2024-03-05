@@ -1,0 +1,300 @@
+# ############################################################
+#   _________  ________  ___  ________  ________   
+#  |\___   ___\\   __  \|\  \|\   __  \|\   __  \  
+#  \|___ \  \_\ \  \|\  \ \  \ \  \|\  \ \  \|\  \ 
+#       \ \  \ \ \   _  _\ \  \ \   ____\ \   ____\
+#        \ \  \ \ \  \\  \\ \  \ \  \___|\ \  \___|
+#         \ \__\ \ \__\\ _\\ \__\ \__\    \ \__\   
+#          \|__|  \|__|\|__|\|__|\|__|     \|__|   
+#
+# ############################################################
+# / - General ChatColor File...
+# / - SKRIPT BY @tripph on discord
+# / - RAINBOW BY Sorben & Mr Darth
+# / - v.1.1.5
+# / - DO NOT REDISTRIBUTE
+# ############################################################
+
+options:
+    permission: chatcolor.use
+    permissionbeg: chatcolor.color.
+    allperm: chatcolor.color.*
+    prefix: <##FFFF66>&l !
+    default: &7
+    specialdefault: &f
+    specialperm: donor.is
+# For donors or staff or whatever you'd like!
+    UseThisForChat: True
+# The best way to actually change the chatcolor is to set the message when they chat 
+# This also works with plugins if you use this method
+# by default, this is on or "true"
+
+# Rainbow Settings
+
+    wrapAmount: 50      # -1 or any amount you want 
+    saturation: 1       # between 0 and 1
+    lightness: 0.5      # between 0 and 1 | 0% = black | 100% = white ;D  
+    offset: 0           # between 0 and 360
+
+#
+#
+#
+#
+#
+# Please do not edit
+#
+#
+#
+#
+
+on load:
+    set {server::defaultchatcolor} to "{@default}"
+    set {server::specialdefaultchatcolor} to "{@specialdefault}"
+
+on join:
+    if player does not have permission "{@specialperm}":
+        if {server::defaultchatcolor} is set:
+            if {chatcolor::%player's uuid%} is not set:
+                set {chatcolor::%player's uuid%} to "{@default}"
+                message "{@prefix} &fYour chatcolor has been set to {@default}this&f."
+        else:
+            message "&4Error: &cThere is an issue with chatcolor, please contact an administrator."
+    else:
+        if {server::specialdefaultchatcolor} is set:
+            if {chatcolor::%player's uuid%} is not set:
+                set {chatcolor::%player's uuid%} to "{@specialdefault}"
+                message "{@prefix} &fYour chatcolor has been set to {@specialdefault}this&f."
+        else:
+            message "&4Error: &cThere is an issue with chatcolor, please contact an administrator."
+
+command /chatcolor [<text>]:
+    permission: {@permission}
+    permission message: &cYou don't have permission to use chatcolor.
+    usage: &cIncorrect Usage, &7(&8/&7chatcolor &7[&8<&7Chatcolor&8>&7])
+    trigger:
+        if arg-1 is not set:
+            create a gui with virtual chest inventory with 5 rows named "&f&lChatcolors" and shape "xxxxxxxxx", "xabcdefgx", "xhijklmnx", "xxxxqxxxx", and "oxxxxxxxp":
+                make gui slot "x" with light gray stained glass pane named "&7"
+                if {chatcolor::%player's uuid%} is "rainbow":
+                    make gui slot "o" with shiny name tag named "&fCurrent Chatcolor: %rainbow("this")%"
+                else:
+                    make gui slot "o" with shiny name tag named "&fCurrent Chatcolor: %{chatcolor::%player's uuid%}%this"
+                make gui slot "p" with shiny barrier named "&cClose GUI":
+                    close player's inventory
+                if player has permission "{@permissionbeg}red" or "{@allperm}":
+                    make gui slot "a" with shiny red dye named "&cRed" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        set {chatcolor::%player's uuid%} to "&c"
+                        play sound "minecraft:block.note_block.bell" to player
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "a" with shiny red dye named "&cRed" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}orange" or "{@allperm}":
+                    make gui slot "b" with shiny orange dye named "&6Orange" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&6"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "b" with shiny orange dye named "&6Orange" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}yellow" or "{@allperm}":
+                    make gui slot "c" with shiny yellow dye named "&eYellow" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&e"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "c" with shiny yellow dye named "&eYellow" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}lime" or "{@allperm}":
+                    make gui slot "d" with shiny lime dye named "&aLime" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&a"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "d" with shiny lime dye named "&aLime" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}green" or "{@allperm}":
+                    make gui slot "e" with shiny green dye named "&2Green" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&2"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "e" with shiny green dye named "&2Green" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}babyblue" or "{@allperm}":
+                    make gui slot "f" with shiny light blue dye named "&bBaby Blue" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&b"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "f" with shiny light blue dye named "&bBaby Blue" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}blue" or "{@allperm}":
+                    make gui slot "g" with shiny blue dye named "<##0093FF>Blue" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "<##0093FF>"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "g" with shiny blue dye named "<##0093FF>Blue" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}cyan" or "{@allperm}":
+                    make gui slot "h" with shiny cyan dye named "&3Cyan" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&3"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "h" with shiny cyan dye named "&3Cyan" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}purple" or "{@allperm}":
+                    make gui slot "i" with shiny purple dye named "&5Purple" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&5"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "i" with shiny purple dye named "&5Purple" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}pink" or "{@allperm}":
+                    make gui slot "j" with shiny pink dye named "&dPink" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&d"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "j" with shiny pink dye named "&dPink" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}gray" or "{@allperm}":
+                    make gui slot "k" with shiny gray dye named "&7Gray" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&7"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "k" with shiny gray dye named "&7Gray" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}black" or "{@allperm}":
+                    make gui slot "l" with shiny black dye named "&8Black" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&8"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "l" with shiny black dye named "&8Black" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}white" or "{@allperm}":
+                    make gui slot "m" with shiny white dye named "&fWhite" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "&f"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "m" with shiny white dye named "&fWhite" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}crystal" or "{@allperm}":
+                    make gui slot "n" with shiny paper named "<##CAF2FF>Crystal" with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "<##CAF2FF>"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %{chatcolor::%player's uuid%}%this&f."
+                else:
+                    make gui slot "n" with shiny paper named "<##CAF2FF>Crystal" with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                if player has permission "{@permissionbeg}rainbow":
+                    make gui slot "q" with shiny amethyst shard named rainbow("Rainbow") with lore "&fStatus: &aAvailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        set {chatcolor::%player's uuid%} to "rainbow"
+                        message formatted "{@prefix} &fYour chatcolor has been set to %rainbow("this")%&f."
+                else:
+                    make gui slot "q" with shiny amethyst shard named rainbow("Rainbow") with lore "&fStatus: &cUnavailable":
+                        close player's inventory
+                        play sound "minecraft:block.note_block.bell" to player
+                        message "{@prefix} &cYou do not have permission to use this chatcolor"
+                open the last gui for the player
+        else:
+            if arg-1 is "check":
+                if {chatcolor::%player's uuid%} is "rainbow":
+                    message formatted "{@prefix} &fYour chatcolor is %rainbow("this")%&f."
+
+# Rainbow
+function decimalToHexadecimal(number: number) :: string:
+    return ("00" if {_number} <= 0, else ("FF")) if {_number} is not between 0 and 255
+    return join (character at (mod((floor({_number} / 16)), 16) + 1) in "0123456789ABCDEF") and (character at ((mod({_number}, 16)) + 1) in "0123456789ABCDEF")
+ 
+function rainbow(input: string, wrapAmount: number = -1, lightness: number = 0.5, offset: number = 0) :: string:
+    set {_delta} to 360 / ({_wrapAmount} if {_wrapAmount} > 0, else length of {_input})
+    set {_lightnessModifier} to (({_lightness}*2)-1) * 255
+    set {_angle} to 90 + ({_delta} * {_offset})
+    loop length of {_input} times:
+        set {_character} to character at loop-value in {_input}
+        if {_character} or (character at (loop-value )-1 in {_input}) is "§":
+            if "abcdefklmnor0123456789" contains {_character}:
+                set {_format} to (join {_format} and "&%{_character}%") if {_character} is not "r", else ("")
+            continue
+        set {_output} to join {_output}, "<##%decimalToHexadecimal((0.5 * (sin({_angle}) + 1)) * 255 + {_lightnessModifier})%%decimalToHexadecimal((0.5 * (sin({_angle} + 120) + 1)) * 255 + {_lightnessModifier})%%decimalToHexadecimal((0.5 * (sin({_angle} + 240) + 1)) * 255 + {_lightnessModifier})%>", {_format} and {_character}
+        remove {_delta} from {_angle}
+    return formatted {_output}
+
+function gradient(input: string, startColor: numbers, endColor: numbers, wrapAmount: number = -1) :: string:
+    set {_delta} to 180 / ({_wrapAmount} if {_wrapAmount} > 0, else (length of unformatted {_input}) - 1)
+    set {_angle} to 90
+    loop length of {_input} times:
+        set {_character} to character at loop-value in {_input}
+        if {_character} or (character at (loop-value ) in {_input}) is "§":
+            if "abcdefklmnor0123456789" contains {_character}:
+                set {_format} to (join {_format} and "&%{_character}%") if {_character} is not "r", else ("")
+            continue
+        set {_startColorProportion} to (0.5 * (sin({_angle}) + 1))
+        set {_endColorProportion} to (0.5 * (sin({_angle} + 180) + 1))
+        set {_output} to join {_output}, "<##%decimalToHexadecimal(({_startColor::1} * {_startColorProportion}) + ({_endColor::1} * {_endColorProportion}))%%decimalToHexadecimal(({_startColor::2} * {_startColorProportion}) + ({_endColor::2} * {_endColorProportion}))%%decimalToHexadecimal(({_startColor::3} * {_startColorProportion}) + ({_endColor::3} * {_endColorProportion}))%>", {_format} and {_character}
+        add {_delta} to {_angle}
+    return formatted {_output}
+
+
+on chat:
+    if {@UseThisForChat} is true:
+        if {chatcolor::%player's uuid%} is "rainbow":
+            set message to rainbow(message, {@wrapAmount}, {@lightness}, {@offset})
+        else:
+            set message to formatted "%{chatcolor::%player's uuid%}%%message%"
+
+
+
+on tab complete of "/chatcolor":
+    set tab completions for position 1 to "check"
