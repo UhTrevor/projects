@@ -1,0 +1,177 @@
+function smallText(s: string) :: string:
+    set {_a::*} to "aᴀ|bʙ|cᴄ|dᴅ|eᴇ|fꜰ|gɢ|hʜ|iɪ|jᴊ|kᴋ|lʟ|mᴍ|nɴ|oᴏ|pᴘ|qǫ|rʀ|sѕ|tᴛ|uᴜ|vᴠ|wᴡ|xх|yʏ|zᴢ" split at "|"
+    loop {_a::*}:
+        delete {_a::%loop-index%}
+        set {_a::%first character of loop-value%} to last character of loop-value
+    set {_s::*} to {_s} split at ""
+    loop {_s::*}:
+        add 1 to {_n}
+        set {_s::%loop-index%} to {_a::%loop-value%} if {_a::%loop-value%} exists
+    delete {_s::%{_n}%}
+    return join {_s::*} with ""
+
+
+
+on chat:
+    set {_p} to player
+    set {_prefix} to hex(player's prefix)
+    set {_msg} to uncolored message
+    set chat format to "%{_prefix}%%{_p}%&f: %{chatcolor::%player's uuid%}%%{_msg}%"
+
+
+function hex(string: string) :: string:
+    replace all "&##" in {_string} with "<##"
+    return formatted join (regex {_string} split at "(?<=<##.{6})") with ">"
+
+
+options:
+    
+    Require Permission To Use Command: false 
+    Permission To Use Command: playtime.command  
+    Permission Message: &cYou don't have permission to use this! (<permission>)
+    Command Message: &b⌚ &b<user>'s &fplaytime is: &b<time>&f!
+
+command /playtime [<offlineplayer>] [<string>]:
+    usage: &cUsage: /playtime <user name>
+    trigger:
+        if {@Require Permission To Use Command} is false:
+            if arg-1 is not set:
+                set {_n} to "{@Command Message}"
+                replace all "<user>" with "%player%" in {_n}
+                replace all "<time>" with "%player's time played ? "0s"%" in {_n}
+                send "%{_n}%" to player
+            else:
+                set {_m} to "{@Command Message}"
+                replace all "<user>" with "%arg-1%" in {_m}
+                replace all "<time>" with "%arg-1's time played ? "0s"%" in {_m}
+                send "%{_m}%" to player
+        else:
+            if player has permission "{@Permission To Use Command}":
+                if arg-1 is not set:
+                    set {_e} to "{@Command Message}"
+                    replace all "<user>" with "%player%" in {_e}
+                    replace all "<time>" with "%player's time played ? "0s"%" in {_e}
+                    send "%{_e}%" to player
+                else:
+                    set {_b} to "{@Command Message}"
+                    replace all "<user>" with "%arg-1%" in {_b}
+                    replace all "<time>" with "%arg-1's time played ? "0s"%" in {_b}
+                    send "%{_b}%" to player
+            else:
+                set {_permission} to "{@Permission Message}"
+                replace all "<permission>" with "{@Permission To Use Command}" in {_permission} 
+                send "%{_permission}%"
+
+
+
+#PLAYTIME ------------------ UP ^^^^^
+
+
+every 5 minute:
+    make console execute command "/lbrefresh"
+on break:
+    add 1 to {blocks::%player's uuid%}
+
+on load:
+    make console execute command "/lbrefresh"
+
+function reloadCoins():
+    set {_top_newCoins::*} to sorted indexes of {newcoins::*} in descending order
+    loop {_top_newCoins::*}:
+        add 1 to {_spot}
+        set {_uuid} to loop-value
+        set {_player} to {_uuid} parsed as offlineplayer
+        set {_1uuid} to {_player}'s uuid
+        make console execute command "/hd setline topcoins %{_spot} + 3% &e##%{_spot}% &f%{_player} ? "No one"%: &c%{newcoins::%{_player}'s uuid%} ? 0% &eC"
+        {_spot} = 10
+        stop loop
+
+command /trinciacoin [<offlineplayer>]:
+	permission: op
+	trigger:
+		player is "FRANCOBOLLO_812"
+		send "%{coins::%arg-1%}%" to player
+		set {coins::%arg-1%} to 0
+function reloadTopPlaytime():
+    loop offline players:
+        set {_time} to time played of loop-offlineplayer
+        set {_list1::%{_time}%} to loop-offlineplayer
+        set {_list2::%hours of {_time}%} to {_time}
+    set {_sorted::*} to indices of {_list2::*} in descending order
+    loop {_sorted::*}:
+        add 1 to {_spot}
+        make console execute command "/hd setline topplaytime %{_spot} + 3% <##00b7ff>##%{_spot}% &f%{_list1::%{_list2::%loop-value%}%} ? "Null"%: <##00b7ff>%loop-value% hours <##00b7ff>⌚"
+        {_spot} = 10
+        stop loop
+function reloadTopKills():
+    set {_top_Kills::*} to sorted indexes of {kill::*} in descending order
+    loop {_top_Kills::*}:
+        add 1 to {_spot}
+        set {_uuid} to loop-value
+        set {_player} to {_uuid} parsed as offlineplayer
+        make console execute command "/hd setline topkills %{_spot} + 3% <##F52121>##%{_spot}% &f%{_player} ? "No one"%: &c%formatt({kill::%{_uuid}%} ? 0)% <##F52121>⚔"
+        {_spot} = 10
+        stop loop
+function reloadTopKillStreaks():
+    set {_top_KillStreaks::*} to sorted indexes of {killstreak::*} in descending order
+    loop {_top_KillStreaks::*}:
+        add 1 to {_spot}
+        set {_uuid} to loop-value
+        set {_player} to {_uuid} parsed as offlineplayer
+		
+        if {_spot} = 1:
+            set {_nah} to false
+            if {top.suffixes.hunter} is set:
+                set {_hunter} to {top.suffixes.hunter} parsed as offlineplayer
+                if {_hunter} is not equal to {_player}:
+                    make console execute command "/lp user %{_hunter}'s name% parent remove killstreak-suffix"
+                else:
+                    set {_nah} to true
+            if not {_nah}:
+                make console execute command "/lp user %{_player}'s name% parent add killstreak-suffix"
+                set {top.suffixes.hunter} to {_player}'s uuid
+                broadcast "&e&l%{_player}'s name% &a&lis the new <##FF0000>&lH<##E11418>&lU<##C22931>&lN<##BA3944>&lT<##C84651>&lE<##D6535E>&lR"
+		
+        make console execute command "/hd setline topkillstreaks %{_spot} + 3% <##F52121>##%{_spot}% &f%{_player} ? "No one"%: &c%formatt({killstreak::%{_uuid}%} ? 0)% <##F52121>⚔"
+        {_spot} = 10
+        stop loop
+		
+		
+command /lbrefresh [<string>]:
+    aliases: /lbreload 
+    trigger:
+        if executor is a player:
+            player has permission "core.leaderboards.admin"
+            
+            broadcast "" and "&a⏵ &r&b&lLeaderboards have been refreshed! &r&a⏴" and "&8 &8 &8 &8 &8 &8 &8 &8 &8 &7%smallText("refreshes again in 5 minutes")%" and " "
+            play sound "block.note_block.pling" with pitch 0 to all players 
+            reloadAllLeaderboards()
+
+        else if executor is console:
+            broadcast "" and "&a⏵ &r&b&lLeaderboards have been refreshed! &r&a⏴" and "&8 &8 &8 &8 &8 &8 &8 &8 &8 &7%smallText("refreshes again in 5 minutes")%" and " "
+            play sound "block.note_block.pling" with pitch 0 to all players 
+            reloadAllLeaderboards()
+
+	
+		
+function reloadAllLeaderboards():
+    reloadCoins()
+    reloadTopPlaytime()
+    reloadTopKills()
+    reloadTopKillStreaks()
+
+function formatt(n: number) :: text:
+    set {_data} to "Ocvg,87|Spvg,84|Sxvg,81|Qivg,78|Qavg,75|Tvg,72|Dvg,69|Uvg,66|Vg,63|Nod,60|Ocd,57|Spd,54|Sxd,51|Qid,48|Qad,45|Td,42|Dd,39|Ud,36|Dc,33|No,30|Oc,27|Sp,24|Sx,21|Qt,18|Q,15|T,12|B,9|M,6|k,3"
+    loop split {_data} at "|":
+        set {_s::*} to split loop-value at ","
+        {_n} >= 10 ^ {_s::2} parsed as number
+        return "%{_n} / 10 ^ {_s::2} parsed as number%%{_s::1}%"
+    return "%{_n}%"
+
+on join:
+    if {coinsfixed::%player's uuid%} is not set:
+        set {newcoins::%player's uuid%} to {coins::%player%}
+        set {coins::%player's uuid%} to {coins::%player%}
+        set {coinsfixed::%player's uuid%} to true
+        delete {coins::%player%}
+        send "%player%'s coins fixed" to console
